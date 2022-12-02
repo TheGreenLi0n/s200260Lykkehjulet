@@ -19,7 +19,7 @@ class GameViewModel : ViewModel() {
     private var wrongLetters: MutableSet<Char> = mutableSetOf()
     private var scoreIncrease: String = ""
     private var currentCategory: String = ""
-    var userGuess: Char = ' '
+    var userGuess: String = ""
 
     init {
         resetGame()
@@ -48,7 +48,7 @@ class GameViewModel : ViewModel() {
     }
 
     fun updateUserGuess(guessedLetter: String) {
-        userGuess = guessedLetter[0]
+        userGuess = guessedLetter
     }
 
     fun spinWheel(){
@@ -61,8 +61,8 @@ class GameViewModel : ViewModel() {
     }
 
     fun checkUserGuess() {
-        usedLetters.add(userGuess)
-        if (currentWord.contains(userGuess)) {
+        usedLetters.add(userGuess.toCharArray()[0])
+        if (currentWord.contains(userGuess[0])) {
             val updatedScore = _uiState.value.score.plus(scoreIncrease.toInt())
             val lives = _uiState.value.lives.minus(0)
             updateGameState(updatedScore, lives)
@@ -73,7 +73,7 @@ class GameViewModel : ViewModel() {
             }
             val updatedScore = _uiState.value.score.plus(0)
             val lives = _uiState.value.lives.minus(1)
-            wrongLetters.add(userGuess)
+            wrongLetters.add(userGuess.toCharArray()[0])
             updateGameState(updatedScore, lives)
             updateUserGuess("")
         }
@@ -93,6 +93,7 @@ class GameViewModel : ViewModel() {
             _uiState.update { currentState ->
                 currentState.copy(
                     currentWord = currentWord,
+
                     scoreIncrease = scoreIncrease,
                     usedLetters = usedLetters,
                     currentCategory = currentCategory,

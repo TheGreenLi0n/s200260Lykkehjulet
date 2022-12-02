@@ -16,48 +16,34 @@ val person: Set<String> =
 
 val title: Set<String> =
     setOf(
-        "balloon",
-        "basket",
-        "bench",
-        "best",
-        "birthday"
+        "Hello",
+        "Yes",
+        "Always",
+        "Something",
+        "Birthday"
     )
 
 val place: Set<String> =
     setOf(
-        "book",
-        "briefcase",
-        "camera",
+        "Mall",
+        "Home",
+        "Forrest",
         "camping",
-        "candle",
-        "cat",
-        "cauliflower",
-        "chat"
     )
 
 val nature: Set<String> =
     setOf(
-        "children",
-        "class",
-        "classic",
-        "classroom",
-        "coffee",
-        "colorful",
-        "cookie",
-        "creative",
-        "cruise",
-        "dance"
+        "Forrest",
+        "Flower",
+        "Field",
+        "Summer",
     )
 
 val food: Set<String> =
     setOf(
-        "meat",
-        "dinosaur",
-        "doorknob",
-        "dine",
-        "dream",
-        "dusk",
-        "eating",
-        "elephant",
-        "emerald",
+        "Meat",
+        "Stake",
+        "Pasta",
+        "Rice",
+        "Sushi",
     )

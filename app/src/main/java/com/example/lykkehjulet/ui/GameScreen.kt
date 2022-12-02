@@ -113,7 +113,7 @@ fun GameLayout(currentWord: Set<Char>,
                usedLetters: Set<Char>,
                scoreIncrease: String,
                isGuessWrong: Boolean,
-               userGuess: Char,
+               userGuess: String,
                onUserGuessChanged: (String) -> Unit,
                onKeyboardDone: () -> Unit,
                modifier: Modifier = Modifier) {
@@ -155,7 +155,9 @@ fun GameLayout(currentWord: Set<Char>,
                            Text(
                                text = letter.toString(),
                                fontSize = 45.sp,
-                               modifier = modifier.alpha(1f)
+                               modifier = modifier
+                                   .alpha(0f)
+                                   .align(alignment = Alignment.Center)
                            )
                        }
                     }
@@ -167,7 +169,7 @@ fun GameLayout(currentWord: Set<Char>,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             OutlinedTextField(
-                value = userGuess.toString(),
+                value = userGuess,
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 onValueChange = onUserGuessChanged,
