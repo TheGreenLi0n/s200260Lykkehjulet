@@ -4,43 +4,45 @@ import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.lykkehjulet.data.allWords
+import com.example.lykkehjulet.data.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.reflect.typeOf
 
 class GameViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(GameUiState())
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
-    private lateinit var currentWord: String
-    private var usedWords: MutableSet<String> = mutableSetOf()
+    private lateinit var currentWord: Set<Char>
     private var usedLetters: MutableSet<Char> = mutableSetOf()
-    private val wrongLetters: MutableSet<Char> = mutableSetOf()
-    private val ScoreIncrease: String = ""
-    private val currentCategory: String = ""
+    private var wrongLetters: MutableSet<Char> = mutableSetOf()
+    private var scoreIncrease: String = ""
+    private var currentCategory: String = ""
     var userGuess: Char = ' '
 
     init {
         resetGame()
     }
 
-    private fun pickRandomWordAndShuffle(): String {
-        currentWord = allWords.random()
-        if (usedWords.contains(currentWord)) {
-            return pickRandomWordAndShuffle()
+    private fun pickRandomWordAndShuffle(category: String): Set<Char> {
+        currentWord = when (category){
+            "person" -> wordInLetters(person.random())
+            "title" -> wordInLetters(title.random())
+            "nature" -> wordInLetters(nature.random())
+            "food" -> wordInLetters(food.random())
+            else -> {
+                wordInLetters(place.random())
+            }
         }
-        else {
-            usedWords.add(currentWord)
-            return currentWord
-        }
+        return currentWord
     }
 
-    private fun wordInLetters(currentWord: String): Set<Char>{
+    private fun wordInLetters(currentWord: String): MutableSet<Char>{
 
-        var letters: Set<Char> = hashSetOf()
-        for (letter in currentWord.split("")){
-            letters.plus(letter)
+        var letters: MutableSet<Char> = mutableSetOf()
+        for (letter in currentWord.toCharArray()){
+            letters.add(letter)
         }
         return letters
     }
@@ -50,41 +52,62 @@ class GameViewModel : ViewModel() {
     }
 
     fun spinWheel(){
-
+        currentCategory = categories.random()
+        currentWord = pickRandomWordAndShuffle(currentCategory)
+        scoreIncrease = value.random()
+        val updatedScore = _uiState.value.score.plus(0)
+        val lives = _uiState.value.lives.minus(0)
+        updateGameState(updatedScore, lives)
     }
 
     fun checkUserGuess() {
-        if (currentWord.contains(currentWord, ignoreCase = true)) {
-            if (ScoreIncrease == "Bankrupt"){
-                val updatedScore = 0
-                updateGameState(updatedScore)
-            }
-            else {
-                val updatedScore = _uiState.value.score.plus(ScoreIncrease.toInt())
-                updateGameState(updatedScore)
-            }
+        usedLetters.add(userGuess)
+        if (currentWord.contains(userGuess)) {
+            val updatedScore = _uiState.value.score.plus(scoreIncrease.toInt())
+            val lives = _uiState.value.lives.minus(0)
+            updateGameState(updatedScore, lives)
         }
         else {
             _uiState.update { currentState ->
                 currentState.copy(isGuessWrong = true)
             }
+            val updatedScore = _uiState.value.score.plus(0)
+            val lives = _uiState.value.lives.minus(1)
+            wrongLetters.add(userGuess)
+            updateGameState(updatedScore, lives)
             updateUserGuess("")
         }
     }
 
-    private fun updateGameState(updatedScore: Int) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                isGuessWrong = false,
-                score = updatedScore,
-                isGameOver = true
-            )
+    private fun updateGameState(updatedScore: Int, updatedLives: Int) {
+        if (updatedLives == 0) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    score = updatedScore,
+                    isGameOver = true,
+
+                )
+            }
+        }
+        else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    currentWord = currentWord,
+                    scoreIncrease = scoreIncrease,
+                    usedLetters = usedLetters,
+                    currentCategory = currentCategory,
+                    isGuessWrong = false,
+                    score = updatedScore,
+                    lives = updatedLives
+
+                )
+            }
         }
     }
 
     fun resetGame() {
-        usedWords.clear()
-        _uiState.value = GameUiState(currentWord = wordInLetters(pickRandomWordAndShuffle()))
+        usedLetters.clear()
+        _uiState.value = GameUiState()
     }
 
 }

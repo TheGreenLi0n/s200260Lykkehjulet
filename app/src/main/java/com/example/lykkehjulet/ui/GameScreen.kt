@@ -46,7 +46,8 @@ fun GameScreen(
             score = gameUiState.score)
         GameLayout(
             currentWord = gameUiState.currentWord,
-            scoreIncrease = gameUiState.ScoreIncrease,
+            usedLetters = gameUiState.usedLetters,
+            scoreIncrease = gameUiState.scoreIncrease,
             userGuess = gameViewModel.userGuess,
             onUserGuessChanged = { gameViewModel.updateUserGuess(it) },
             onKeyboardDone = { gameViewModel.checkUserGuess() },
@@ -109,7 +110,8 @@ fun GameStatus( category: String, score: Int, modifier: Modifier = Modifier) {
 
 @Composable
 fun GameLayout(currentWord: Set<Char>,
-               scoreIncrease: Int,
+               usedLetters: Set<Char>,
+               scoreIncrease: String,
                isGuessWrong: Boolean,
                userGuess: Char,
                onUserGuessChanged: (String) -> Unit,
@@ -125,17 +127,28 @@ fun GameLayout(currentWord: Set<Char>,
         ) {
             Text(
                 text = "possible points: $scoreIncrease",
-                fontSize = 45.sp,
+                fontSize = 32.sp,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             )
-            Row() {
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .size(48.dp),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
                 for ( letter in currentWord){
-                    Box(modifier = modifier.border(width = 2.dp, color = Color.Black.copy(alpha = 0.5f), shape = RoundedCornerShape(5.dp)), ){
-                       if (true){
+                    Box(modifier = modifier
+                        .border(width = 2.dp, color = Color.Black.copy(alpha = 0.5f), shape = RoundedCornerShape(5.dp))
+                        .width(width = 35.dp)
+
+                    ){
+                       if (usedLetters.contains(letter)){
                            Text(
                                text = letter.toString(),
                                fontSize = 45.sp,
                                modifier = modifier
+                                   .align(alignment = Alignment.Center)
                            )
                        }
                        else {
