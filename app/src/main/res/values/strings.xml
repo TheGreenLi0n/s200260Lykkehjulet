@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">s200260Lykkehjulet</string>
+    <string name="instructions">Guess the word by finding all the letters.</string>
+    <string name="submit">Guess</string>
+    <string name="spin">Spin</string>
+    <string name="category">Category</string>
+    <string name="score">Score: %d</string>
+    <string name="enter_your_word">Enter your letter</string>
+    <string name="congratulations">Congratulations!</string>
+    <string name="you_scored">"You scored: %d"</string>
+    <string name="exit">Exit</string>
+    <string name="play_again">Play Again</string>
+    <string name="wrong_guess">Wrong Guess!</string>
+</resources>
